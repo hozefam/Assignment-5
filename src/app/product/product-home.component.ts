@@ -9,8 +9,6 @@ import { Product } from './product';
       <div class="column is-2">
         <app-product-list
           [selectedProductId]="selectedProduct?.id"
-          (productSelection)="handleProductSelection($event)"
-          [products]="products"
         ></app-product-list>
         <br />
         <button
@@ -21,19 +19,12 @@ import { Product } from './product';
         </button>
       </div>
       <div class="column is-5" *ngIf="selectedProduct">
-        <app-product-detail
-          [product]="selectedProduct"
-          (cancel)="cancelSelectedProduct()"
-          (edit)="editProduct()"
-        ></app-product-detail>
+        <app-product-detail [product]="selectedProduct"></app-product-detail>
       </div>
-      <div class="column is-5">
+      <div class="column is-5" *ngIf="mode !== null">
         <app-product-form
-          (cancelForm)="cancelForm()"
-          *ngIf="mode !== null"
-          [mode]="mode"
           [product]="selectedProduct"
-          (productsChanged)="updateProducts()"
+          [mode]="mode"
         ></app-product-form>
       </div>
     </div>
@@ -41,44 +32,23 @@ import { Product } from './product';
   styles: [],
 })
 export class ProductHomeComponent implements OnInit {
-  products: Product[];
-  selectedProduct: Product = null;
   mode: string = null;
-  inEditMode = false;
+  selectedProduct: Product = null;
 
   constructor(private productService: ProductService) {}
 
   ngOnInit(): void {
-    this.products = this.productService.getProducts();
-  }
+    this.productService.selectedProduct$.subscribe((val) => {
+      this.selectedProduct = val;
+    });
 
-  handleProductSelection(productId) {
-    if (productId) {
-      this.selectedProduct = this.productService.getProductDetail(productId);
-      this.mode = null;
-    }
-  }
-
-  cancelSelectedProduct() {
-    this.selectedProduct = null;
-  }
-
-  cancelForm() {
-    this.mode = null;
+    this.productService.mode$.subscribe((val) => {
+      this.mode = val;
+    });
   }
 
   setAddMode() {
-    this.mode = 'ADD';
-    this.selectedProduct = null;
-  }
-
-  editProduct() {
-    this.mode = 'EDIT';
-  }
-
-  updateProducts() {
-    this.mode = null;
-    this.selectedProduct = null;
-    this.products = this.productService.getProducts();
+    this.productService.selectedProduct$.next(null);
+    this.productService.mode$.next('ADD');
   }
 }

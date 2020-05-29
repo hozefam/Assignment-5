@@ -2,9 +2,9 @@ import { ProductService } from './../product.service';
 import { Product } from './../product';
 import {
   Component,
-  OnInit,
   Output,
   EventEmitter,
+  OnInit,
   Input,
   OnChanges,
   SimpleChanges,
@@ -16,22 +16,20 @@ import {
   styleUrls: ['./product-detail.component.css'],
 })
 export class ProductDetailComponent implements OnChanges {
-  @Input() product!: Product;
-  @Output() cancel: EventEmitter<any> = new EventEmitter();
-  @Output() edit: EventEmitter<any> = new EventEmitter();
+  @Input() product: Product;
 
   constructor(private productService: ProductService) {}
+
+  cancelSelection() {
+    this.productService.selectedProduct$.next(null);
+  }
 
   ngOnChanges(changes: SimpleChanges): void {
     this.product = changes.product.currentValue;
   }
 
-  cancelSelection() {
-    this.cancel.emit();
-  }
-
   onEdit() {
-    this.edit.emit();
+    this.productService.mode$.next('EDIT');
   }
 
   onDelete() {

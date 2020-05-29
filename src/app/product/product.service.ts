@@ -4,11 +4,20 @@ import { Subject, BehaviorSubject } from 'rxjs';
 
 @Injectable()
 export class ProductService {
-  // productChanged$ = new BehaviorSubject<Product[]>([]);
-  products: Product[];
+  products$ = new BehaviorSubject<Product[]>([]);
+  selectedProduct$ = new BehaviorSubject<Product>(null);
+  mode$ = new Subject<string>();
+  // productMode$ = new Subject<string>().asObservable();
+  private products: Product[];
 
   constructor() {
-    this.products = [
+    this.products = this.seedProducts();
+    this.products$.next(this.products);
+    this.mode$.next(null);
+  }
+
+  seedProducts(): Product[] {
+    return [
       {
         id: 1,
         name: 'Pencil',
@@ -63,25 +72,34 @@ export class ProductService {
   }
 
   getProducts(): Product[] {
-    return this.products;
+    return this.products$.value;
   }
 
   getProductDetail(id: number): Product {
-    return this.products.find((p) => p.id === id);
+    return this.products$.value.find((p) => (p.id = id));
   }
 
-  addProduct(newProduct: Product) {
-    this.products.push({ ...newProduct, id: this.products.length + 1 });
+  addProduct(product: Product) {
+    const newProduct = { ...product, id: this.products.length + 1 };
+    this.products.push(newProduct);
+    this.products$.next(this.products);
+    this.selectedProduct$.next(newProduct);
+    this.mode$.next(null);
   }
 
-  updateProduct(id: number, updatedProduct: Product) {
-    const filteredProducts = this.products.filter((p) => p.id !== id);
-    this.products = [...filteredProducts, updatedProduct];
+  updateProduct(updatedProduct: Product) {
+    const index = this.products.findIndex((p) => p.id === updatedProduct.id);
+    this.products[index] = updatedProduct;
+    this.products$.next(this.products);
+    this.selectedProduct$.next(updatedProduct);
+    this.mode$.next(null);
   }
 
   deleteProduct(id: number) {
-    console.log('Delete Called');
     const filteredProducts = this.products.filter((p) => p.id !== id);
     this.products = [...filteredProducts];
+    this.products$.next(this.products);
+    this.selectedProduct$.next(null);
+    this.mode$.next(null);
   }
 }

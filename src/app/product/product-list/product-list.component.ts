@@ -1,3 +1,5 @@
+import { Validators } from '@angular/forms';
+import { ProductService } from './../product.service';
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { Product } from '../product';
 
@@ -7,19 +9,22 @@ import { Product } from '../product';
   styleUrls: ['./product-list.component.css'],
 })
 export class ProductListComponent implements OnInit {
-  @Input() products: Product[];
+  products: Product[];
   @Input() selectedProductId: number;
 
-  @Output() productSelection: EventEmitter<number>;
+  constructor(private productService: ProductService) {}
 
-  constructor() {
-    this.productSelection = new EventEmitter();
+  ngOnInit(): void {
+    this.productService.products$.subscribe((prods) => {
+      this.products = prods;
+    });
   }
-
-  ngOnInit(): void {}
 
   handleSelection(id: number) {
     this.selectedProductId = id;
-    this.productSelection.emit(id);
+    this.productService.mode$.next(null);
+    this.productService.selectedProduct$.next(
+      this.productService.products$.value.find((p) => p.id === id)
+    );
   }
 }

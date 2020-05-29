@@ -1,15 +1,6 @@
 import { ProductService } from './../product.service';
 import { Product } from './../product';
-import {
-  Component,
-  OnInit,
-  Output,
-  EventEmitter,
-  Input,
-  OnChanges,
-  SimpleChanges,
-  OnDestroy,
-} from '@angular/core';
+import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 
 @Component({
@@ -17,11 +8,9 @@ import { FormBuilder, Validators, FormGroup } from '@angular/forms';
   templateUrl: './product-form.component.html',
   styleUrls: ['./product-form.component.css'],
 })
-export class ProductFormComponent implements OnChanges, OnDestroy {
+export class ProductFormComponent implements OnChanges {
   @Input() mode: string;
   @Input() product: Product;
-  @Output() cancelAdd: EventEmitter<any> = new EventEmitter();
-  @Output() productsChanged: EventEmitter<any> = new EventEmitter();
 
   productForm: FormGroup;
 
@@ -59,14 +48,8 @@ export class ProductFormComponent implements OnChanges, OnDestroy {
     }
   }
 
-  ngOnDestroy() {
-    console.log('Destroy Called');
-    this.product = null;
-    this.mode = null;
-  }
-
   cancel() {
-    this.cancelAdd.emit();
+    this.productService.mode$.next(null);
   }
 
   submit() {
@@ -74,12 +57,8 @@ export class ProductFormComponent implements OnChanges, OnDestroy {
       if (this.mode === 'ADD') {
         this.productService.addProduct(this.productForm.value);
       } else if (this.mode === 'EDIT') {
-        this.productService.updateProduct(
-          this.product.id,
-          this.productForm.value
-        );
+        this.productService.updateProduct(this.productForm.value);
       }
-      this.productsChanged.emit();
     }
   }
 }
