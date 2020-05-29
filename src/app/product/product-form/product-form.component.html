@@ -1,0 +1,187 @@
+<div class="tile is-ancestor">
+  <div class="tile is-parent">
+    <div class="tile notification is-child is-light is-info">
+      <button (click)="cancel()" class="delete"></button>
+      <h1 class="title">{{ mode | titlecase }} Product</h1>
+
+      {{ productForm.value | json }}
+
+      <form novalidate (ngSubmit)="submit()" [formGroup]="productForm">
+        <div class="field">
+          <label class="label">Name</label>
+          <div class="control">
+            <input class="input" formControlName="name" type="text" />
+          </div>
+          <p
+            class="help is-danger"
+            *ngIf="
+              productForm.get('name').hasError('required') &&
+              productForm.get('name').touched
+            "
+          >
+            Name is required
+          </p>
+        </div>
+
+        <div class="field">
+          <label class="label">Description</label>
+          <div class="control">
+            <textarea
+              class="textarea"
+              formControlName="description"
+              type="text"
+            ></textarea>
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="label">Price</label>
+          <div class="control">
+            <input
+              class="input"
+              step="any"
+              type="number"
+              formControlName="price"
+            />
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="label">Owner</label>
+          <div class="control">
+            <input class="input" formControlName="owner" type="text" />
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="label">Color</label>
+          <div class="control">
+            <input class="input" formControlName="color" type="text" />
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="label">Quantity</label>
+          <div class="control">
+            <input class="input" formControlName="quantity" type="number" />
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="label">In Stock</label>
+          <div class="control">
+            <label class="radio">
+              <input type="radio" value="Yes" formControlName="inStock" />
+              Yes
+            </label>
+            <label class="radio">
+              <input type="radio" value="No" formControlName="inStock" />
+              No
+            </label>
+          </div>
+        </div>
+
+        <div class="field is-grouped is-grouped-right">
+          <p class="control">
+            <button
+              class="button is-info"
+              type="submit"
+              [disabled]="productForm.invalid"
+            >
+              Save Product
+            </button>
+          </p>
+          <p class="control">
+            <a class="button is-light">
+              Cancel
+            </a>
+          </p>
+        </div>
+      </form>
+
+      <!-- 
+      <div class="field">
+        <label class="label">Description</label>
+        <div class="control">
+          <textarea
+            class="textarea"
+            [formsControl]="description"
+            [value]="product?.description"
+            type="text"
+          ></textarea>
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="label">Price</label>
+        <div class="control">
+          <input
+            class="input"
+            step="any"
+            type="number"
+            [formsControl]="price"
+            [value]="product?.price"
+          />
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="label">Owner</label>
+        <div class="control">
+          <input
+            class="input"
+            [formsControl]="owner"
+            [value]="product?.owner"
+            type="text"
+          />
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="label">Color</label>
+        <div class="control">
+          <input
+            class="input"
+            [formsControl]="color"
+            [value]="product?.color"
+            type="text"
+          />
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="label">Quantity</label>
+        <div class="control">
+          <input
+            class="input"
+            [formsControl]="quantity"
+            [value]="product?.quantity"
+            type="number"
+          />
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="label">In Stock</label>
+        <div class="control">
+          <label class="radio">
+            <input
+              type="radio"
+              [formsControl]="answer"
+              [checked]="product?.inStock"
+            />
+            Yes
+          </label>
+          <label class="radio">
+            <input
+              type="radio"
+              [formsControl]="answer"
+              [checked]="!product?.inStock"
+            />
+            No
+          </label>
+        </div>
+      </div> -->
+    </div>
+  </div>
+</div>

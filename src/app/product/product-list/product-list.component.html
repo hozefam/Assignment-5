@@ -1,0 +1,14 @@
+<aside class="menu">
+  <p class="menu-label">
+    {{ "Products" | uppercase }}
+  </p>
+  <ul class="menu-list">
+    <li *ngFor="let product of products">
+      <a
+        (click)="handleSelection(product.id)"
+        [ngClass]="{ 'is-active': this.selectedProductId === product.id }"
+        >{{ product.name }}</a
+      >
+    </li>
+  </ul>
+</aside>
