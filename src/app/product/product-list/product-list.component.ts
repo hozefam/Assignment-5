@@ -10,7 +10,7 @@ import { Product } from '../product';
 })
 export class ProductListComponent implements OnInit {
   products: Product[];
-  @Input() selectedProductId: number;
+  @Input() selectedProductId: string;
 
   constructor(private productService: ProductService) {}
 
@@ -20,7 +20,7 @@ export class ProductListComponent implements OnInit {
     });
   }
 
-  handleSelection(id: number) {
+  handleSelection(id: string) {
     this.selectedProductId = id;
     this.productService.mode$.next(null);
     this.productService.selectedProduct$.next(

@@ -1,6 +1,7 @@
 import { Product } from './product';
 import { Injectable } from '@angular/core';
 import { Subject, BehaviorSubject } from 'rxjs';
+import { v4 as uuidv4 } from 'uuid';
 
 @Injectable()
 export class ProductService {
@@ -19,7 +20,7 @@ export class ProductService {
   seedProducts(): Product[] {
     return [
       {
-        id: 1,
+        id: uuidv4(),
         name: 'Pencil',
         description: 'Use this to write your story',
         price: 250,
@@ -29,7 +30,7 @@ export class ProductService {
         inStock: 'No',
       },
       {
-        id: 2,
+        id: uuidv4(),
         name: 'Hammer',
         description: 'Hammer description',
         price: 100,
@@ -39,7 +40,7 @@ export class ProductService {
         inStock: 'Yes',
       },
       {
-        id: 3,
+        id: uuidv4(),
         name: 'Nails',
         description: 'Nails description',
         price: 100,
@@ -49,7 +50,7 @@ export class ProductService {
         inStock: 'Yes',
       },
       {
-        id: 4,
+        id: uuidv4(),
         name: 'Pen',
         description: 'Pen description',
         price: 100,
@@ -59,7 +60,7 @@ export class ProductService {
         inStock: 'No',
       },
       {
-        id: 5,
+        id: uuidv4(),
         name: 'Notebook',
         description: 'Notebook description',
         price: 200,
@@ -75,13 +76,13 @@ export class ProductService {
     return this.products$.value;
   }
 
-  getProductDetail(id: number): Product {
+  getProductDetail(id: string): Product {
     return this.products$.value.find((p) => (p.id = id));
   }
 
   addProduct(product: Product) {
-    const newProduct = { ...product, id: this.products.length + 1 };
-    this.products.push(newProduct);
+    const newProduct = { ...product, id: uuidv4() };
+    this.products = [...this.products, newProduct];
     this.products$.next(this.products);
     this.selectedProduct$.next(newProduct);
     this.mode$.next(null);
@@ -95,7 +96,7 @@ export class ProductService {
     this.mode$.next(null);
   }
 
-  deleteProduct(id: number) {
+  deleteProduct(id: string) {
     const filteredProducts = this.products.filter((p) => p.id !== id);
     this.products = [...filteredProducts];
     this.products$.next(this.products);
